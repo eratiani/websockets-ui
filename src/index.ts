@@ -1,12 +1,8 @@
-import { startHttpServer, startWebSocket } from "./servers/index.js";
+import { startWebSocket } from "./servers/index";
 
-export const HTTP_PORT = 5000;
-export const WS_PORT = 8080;
+export const WS_PORT = 3000;
 
 const processExitEvents = ["SIGINT", "SIGTERM", "SIGQUIT", "uncaughtException"];
-const httpServer = startHttpServer(HTTP_PORT, () => {
-  console.log(`Started static http server on the ${HTTP_PORT} port.`);
-});
 
 const wsServer = startWebSocket(WS_PORT);
 
@@ -19,9 +15,6 @@ const handleSignal = (signal: string, code: number) => {
   });
 
   wsServer.close();
-
-  httpServer.close();
-
   process.exit(code);
 };
 processExitEvents.forEach((event) => {

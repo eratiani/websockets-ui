@@ -1,4 +1,4 @@
-import { startWebSocket } from "./ws.server.js";
-import { startHttpServer } from "./http.server.js";
+import { startWebSocket } from "./ws.server";
+import { startHttpServer } from "./http.server";
 
 export { startWebSocket, startHttpServer };
