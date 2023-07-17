@@ -9,7 +9,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "node -r ts-node/register ./index.ts",
+    "start": "node -r ts-node/register ./src/index.ts",
     "start:dev": "nodemon --exec ts-node-dev ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write \"src/**/*.ts\""

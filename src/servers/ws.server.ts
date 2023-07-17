@@ -2,6 +2,10 @@ import { WebSocket, Server as WebSocketServer } from "ws";
 
 import { logInUser } from "../commands/commands";
 import { startHttpServer } from "./index";
+import createRoom from "../commands/createRoom";
+import updateRoom from "../commands/updateRoom";
+import { roomsDB } from "../db/rooms";
+import { usersDB } from "../db/users";
 export interface WebSocketWithId extends WebSocket {
   id: number;
 }
@@ -23,6 +27,7 @@ export const startWebSocket = (port: number) => {
             logInUser(mes.data, ws, ws.id);
             break;
           case "create_room":
+            createRoom(wsServer, ws.id);
             break;
           case "add_user_to_room":
             break;
@@ -41,6 +46,18 @@ export const startWebSocket = (port: number) => {
       } catch (error) {
         console.error("Error:", error);
       }
+    });
+    ws.on("close", function () {
+      for (const [key, value] of roomsDB.rooms) {
+        if (value.some((e) => e.index === ws.id)) {
+          roomsDB.removeRoom(key);
+          wsServer.clients.forEach((e: WebSocket) =>
+            e.send(JSON.stringify(updateRoom()))
+          );
+          break;
+        }
+      }
+      usersDB.exitPlayer(ws.id);
     });
   });
   return wsServer;
